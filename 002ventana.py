@@ -15,39 +15,39 @@ def pesos_to_usd(pesos):
     rate = get_rate()
     return pesos / rate
 
-def convert_to_pesos(event=None):
+def convert(event=None):
         try:
             amount = float(entry.get())
-            pesos = usd_to_pesos(amount)
-            result.config(text=f"{pesos} pesos")
+            if direction.get() == "to_pesos":
+                 pesos = usd_to_pesos(amount)
+                 result.config(text=f"{pesos} pesos")
+            else:
+                 usd = pesos_to_usd(amount)
+                 result.config(text=f"{usd} USD")
         except:
             result.config(text="Ingresa un numero valido")
-
-def convert_to_usd(event=None):
-     try:
-          amount = float(entry.get())
-          usd = pesos_to_usd(amount)
-          result.config(text=f"{usd} USD")
-    
-     except:
-          result.config(text="Ingresa un numero valido")
 
 window = tk.Tk()
 window.title("Conversor de dolar")
 window.geometry("600x400")
 
-label = tk.Label(window, text="Cantidad en dolares:")
-label.pack()
+direction = tk.StringVar(value= "to_pesos")
 
-entry = tk.Entry(window)
-entry.pack()
-entry.bind("<Return>", convert_to_pesos)
+label = tk.Label(window, text="Ingresa la cantidad:", font=("Arial", 16))
+label.pack(pady=(40, 19))
 
-button_pesos = tk.Button(window, text="Dolares → Pesos", command=convert_to_pesos)
-button_pesos.pack()
+entry = tk.Entry(window, font=("Arial", 16), width=15)
+entry.pack(pady = 10)
+entry.bind("<Return>", convert)
 
-button_usd = tk.Button(window, text="Pesos → Dolares", command=convert_to_usd)
-button_usd.pack()
+radio1 = tk.Radiobutton(window, text="Dolares → Pesos", variable=direction, value="to_pesos", font=("Arial", 12))
+radio1.pack()
+
+radio2 = tk.Radiobutton(window, text="Pesos → Dolares", variable=direction, value="to_usd", font=("Arial", 12))
+radio2.pack()
+
+button = tk.Button(window, text="Convertir", command=convert, font=("Arial", 14))
+button.pack(pady=15)
 
 result = tk.Label(window, text="")
 result.pack()
